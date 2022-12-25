@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: laravel-app
-        image: ysofficellc/laravel_docker_app
+        image: ysofficellc/laravel-aws-eks:v2
         ports:
         - containerPort: 80
         env:
