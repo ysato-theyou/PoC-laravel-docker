@@ -44,6 +44,49 @@ The push refers to repository [docker.io/ysofficellc/laravel_docker_app]
 latest: digest: sha256:b045a7479fccc172342e5dd46e0a731e912d0404c55d9a4741370aad2e538992 size: 4081
 ```
 
+## AWS EKS へデプロイ
+
+1. Laravel プロジェクトを作成
+   `docker-compose exec app composer create-project --prefer-dist laravel/laravel laravel-aws-eks`
+2. 権限修正（環境に依るので本来は環境変数で調整するほうが良い）
+   `sudo chown -R www-data: laravel-aws-eks/`
+3. イメージビルド
+    `docker build -f docker/php/apache.Dockerfile laravel-aws-eks -t ysofficellc/laravel-aws-eks:v2`
+4. イメージプッシュ
+    `docker push ysofficellc/laravel-aws-eks:v2`
+
+### クラスター作成
+
+`eksctl create cluster --name=laravel-kube-cluster --nodes=2 --node-type=t2.micro`
+結構時間かかる
+
+### Kubernetes へ kubectl を用いてデプロイする
+
+1. Deployments 投入
+   `kubectl apply -f laravel-mysql-kubernetes.yaml`
+2. Service 投入
+    `kubectl apply -f laravel-service.yaml`
+3. 動作確認
+  - `kubectl get nodes`
+  - `kubectl get pods`
+  - `kubectl get services`
+    - 参考
+    ```shell
+    $ kubectl get nodes 
+    NAME                                               STATUS   ROLES    AGE   VERSION
+    ip-192-168-10-69.ap-northeast-1.compute.internal   Ready    <none>   28m   v1.23.13-eks-fb459a0
+    ip-192-168-83-17.ap-northeast-1.compute.internal   Ready    <none>   28m   v1.23.13-eks-fb459a0
+    $ kubectl get pods 
+    NAME                       READY   STATUS    RESTARTS   AGE
+    laravel-5f85c5c975-gd586   2/2     Running   0          3m
+    $ kubectl get services
+    NAME              TYPE           CLUSTER-IP      EXTERNAL-IP                                                                    PORT(S)        AGE
+    kubernetes        ClusterIP      10.100.0.1      <none>                                                                         443/TCP        38m
+    laravel-service   LoadBalancer   10.100.110.29   [MASK].ap-northeast-1.elb.amazonaws.com   80:32096/TCP   25m
+    ```
+![image](https://user-images.githubusercontent.com/108514223/209470824-66456a53-650c-4efb-a3cf-667ea90763b8.png)
+
+
 ## 参考資料
 * [Laravel開発環境をDockerを使って構築する（LEMP環境)](https://www.torat.jp/laravel-docker-lemp/)
 * [Deploy a Laravel App to Amazon EKS in 5 minutes](https://gbengaoni.com/blog/Deploy-a-Laravel-App-to-Amazon-EKS-in-5-minutes-a94a41436157)
