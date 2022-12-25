@@ -45,5 +45,5 @@ latest: digest: sha256:b045a7479fccc172342e5dd46e0a731e912d0404c55d9a4741370aad2
 ```
 
 ## 参考資料
-* https://www.torat.jp/laravel-docker-lemp/
- 
+* [Laravel開発環境をDockerを使って構築する（LEMP環境)](https://www.torat.jp/laravel-docker-lemp/)
+* [Deploy a Laravel App to Amazon EKS in 5 minutes](https://gbengaoni.com/blog/Deploy-a-Laravel-App-to-Amazon-EKS-in-5-minutes-a94a41436157)
