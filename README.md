@@ -23,6 +23,7 @@
    `sudo chown -R www-data: laravel-project/`
 7. 疎通テスト
     ブラウザで http://localhost:8000 へアクセス
+    ![image](https://user-images.githubusercontent.com/108514223/209458663-b29aabd4-e209-43d0-a0a9-4d9746165e91.png)
 
 ## 参考資料
 * https://www.torat.jp/laravel-docker-lemp/
